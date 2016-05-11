@@ -1,0 +1,31 @@
+#!/bin/bash
+
+TCPTUNNEL_REMOTE_HOST=""
+TCPTUNNEL_BIND_ADDRESS=127.0.0.1
+
+echo "=================================================="
+echo "                 TCPTunnel script"
+echo "=================================================="
+
+while read line
+do
+    if [[ $line =~ ^# ]]
+    then
+	continue;
+    else
+        #IFS='\n' read -a line <<< "$line"
+        arr=(`echo $line | cut -d ":"  --output-delimiter=" " -f 1-`)
+        if [[ "${#arr[@]}" -eq 2 ]]
+        then
+            if [[ "${arr[0]}" == "host" && -n "${arr[1]}" ]]
+            then
+                TCPTUNNEL_REMOTE_HOST="${arr[1]}"
+            	echo "$TCPTUNNEL_REMOTE_HOST"
+            elif [[ "${arr[0]}" -ge 1 && "${arr[1]}" -ge 1 && -n "$TCPTUNNEL_REMOTE_HOST" ]]
+            then
+                echo "    $TCPTUNNEL_BIND_ADDRESS:${arr[0]} <--> $TCPTUNNEL_REMOTE_HOST:${arr[1]}"
+                tcptunnel --local-port=${arr[0]} --remote-port=${arr[1]} --remote-host=$TCPTUNNEL_REMOTE_HOST --bind-address=$TCPTUNNEL_BIND_ADDRESS --stay-alive &
+            fi
+        fi
+    fi
+done <tcptunnel.cfg
