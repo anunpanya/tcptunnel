@@ -12,9 +12,12 @@ $ cd tcptunnel
 $ ./configure
 $ make
 $ make install
+
+$ git clone https://github.com/anunpanya/tcptunnel.git
+$ cd tcptunnel
 ```
 
-### Configure
+## Configure
 
 ```
 nano tcptunnel.cfg
@@ -28,8 +31,20 @@ host:example.com
 
 ```
 
-### Run script
+## Run script
 
 ```
+chmod +x start-tcptunnel
+chmod +x stop-tcptunnel
+
 ./start-tcptunnel
+echo "=================================================="
+echo "                 TCPTunnel script"
+echo "=================================================="
+example.com
+    127.0.0.1:80 <--> example.com:80
+    127.0.0.1:443 <--> example.com:443
+    
+./stop-tcptunnel
+Killed
 ```
